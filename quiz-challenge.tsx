@@ -604,7 +604,7 @@ export default function PujoQuizChallenge() {
             <CardContent className="pt-4">
               <div className="grid gap-3">
                 {currentQ.options.map((option, index) => {
-                  let buttonClass = "w-full p-4 text-left border-2 rounded-xl transition-all duration-200 backdrop-blur-sm "
+                  let buttonClass = "w-full p-4 text-left border-2 rounded-xl transition-all duration-200 backdrop-blur-sm text-purple-800 "
 
                   if (showAnswer) {
                     if (index === currentQ.correct) {
