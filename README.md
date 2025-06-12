@@ -7,8 +7,6 @@
 
 A vibrant, interactive quiz application centered around Durga Puja and Bengali cultural traditions. This engaging quiz platform tests users' knowledge about various aspects of Durga Puja celebrations, mythology, rituals, food, music, and cultural practices.
 
-![Pujo Quiz Challenge Screenshot](public/Monica_2025-06-12_17-51-08.png)
-
 ## 🌟 Features
 
 - **Multiple Quiz Categories**: Choose from 12 different categories including Durga Trivia, Festival Foods, Bengali Culture, and more
