@@ -21,6 +21,14 @@ import {
   Info,
   BarChart3,
   AlertCircle,
+  Flame,
+  PaintBucket,
+  MessageSquare,
+  Scissors,
+  MapPin,
+  UtensilsCrossed,
+  Music2,
+  Globe
 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { AnimatePresence, motion } from "framer-motion"
@@ -83,6 +91,62 @@ const quizCategories: QuizCategory[] = [
     icon: BookOpen,
     description: "Origins and evolution of Durga Puja",
     color: "from-blue-400 to-indigo-500",
+  },
+  {
+    id: "puja-rituals",
+    title: "Puja Rituals",
+    icon: Flame,
+    description: "Traditional ceremonies and practices",
+    color: "from-red-400 to-rose-500",
+  },
+  {
+    id: "pandal-art",
+    title: "Pandal Art",
+    icon: PaintBucket,
+    description: "Famous themes and artistic creations",
+    color: "from-amber-400 to-yellow-500",
+  },
+  {
+    id: "mythology",
+    title: "Durga Mythology",
+    icon: MessageSquare,
+    description: "Stories and legends of the goddess",
+    color: "from-pink-400 to-rose-500",
+  },
+  {
+    id: "puja-fashion",
+    title: "Puja Fashion",
+    icon: Scissors,
+    description: "Traditional clothing and styles",
+    color: "from-cyan-400 to-teal-500",
+  },
+  {
+    id: "pandal-hopping",
+    title: "Pandal Hopping",
+    icon: MapPin,
+    description: "Famous pandals and their specialties",
+    color: "from-violet-400 to-indigo-500",
+  },
+  {
+    id: "bhog-cuisine",
+    title: "Bhog Cuisine",
+    icon: UtensilsCrossed,
+    description: "Sacred food offerings and recipes",
+    color: "from-lime-400 to-green-500",
+  },
+  {
+    id: "dhak-music",
+    title: "Dhak & Music",
+    icon: Music2,
+    description: "Traditional instruments and songs",
+    color: "from-fuchsia-400 to-purple-500",
+  },
+  {
+    id: "puja-around-world",
+    title: "Global Puja",
+    icon: Globe,
+    description: "Durga Puja celebrations worldwide",
+    color: "from-sky-400 to-blue-500",
   },
 ]
 
@@ -593,7 +657,13 @@ export default function PujoQuizChallenge() {
                 <span className={`font-bold ${timeLeft <= 10 ? "text-red-500" : "text-purple-600"}`}>{timeLeft}s</span>
               </div>
             </div>
-            <Progress value={progress} className="h-2 bg-purple-100" indicatorClassName="bg-gradient-to-r from-purple-500 to-indigo-500" />
+            <Progress 
+              value={progress} 
+              className="h-2 bg-purple-100"
+              style={{ 
+                '--progress-background': 'linear-gradient(to right, rgb(168, 85, 247), rgb(79, 70, 229))'
+              } as React.CSSProperties} 
+            />
           </div>
 
           {/* Question Card */}
