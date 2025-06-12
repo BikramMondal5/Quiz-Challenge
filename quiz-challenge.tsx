@@ -176,6 +176,11 @@ const getLeaderboardData = (): LeaderboardEntry[] => [
   { name: "Meera Roy", score: 88, avatar: "/placeholder.svg?height=40&width=40", date: "June 10, 2025" },
   { name: "Rahul Ghosh", score: 85, avatar: "/placeholder.svg?height=40&width=40", date: "June 10, 2025" },
   { name: "Ananya Bose", score: 82, avatar: "/placeholder.svg?height=40&width=40", date: "June 9, 2025" },
+  { name: "Ravi Sharma", score: 80, avatar: "/placeholder.svg?height=40&width=40", date: "June 12, 2025" },
+  { name: "Sunita Patel", score: 78, avatar: "/placeholder.svg?height=40&width=40", date: "June 8, 2025" },
+  { name: "Dev Kumar", score: 75, avatar: "/placeholder.svg?height=40&width=40", date: "June 11, 2025" },
+  { name: "Kavita Joshi", score: 72, avatar: "/placeholder.svg?height=40&width=40", date: "June 9, 2025" },
+  { name: "Amit Verma", score: 70, avatar: "/placeholder.svg?height=40&width=40", date: "June 7, 2025" },
 ]
 
 // Animation variants for screens
@@ -433,7 +438,7 @@ export default function PujoQuizChallenge() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button
               onClick={() => setCurrentScreen("categories")}
-              className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-xl transform hover:scale-105 transition-all duration-200 border-0"
+              className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-xl transform hover:scale-105 transition-all duration-200 border-0 backdrop-blur-sm bg-opacity-80 hover:shadow-fuchsia-500/30"
               aria-label="Choose a quiz category"
             >
               <Play className="mr-2 h-5 w-5" />
@@ -442,7 +447,7 @@ export default function PujoQuizChallenge() {
             <Button
               onClick={() => startQuiz()}
               variant="outline"
-              className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 backdrop-blur-sm py-4 px-8 rounded-2xl text-lg font-semibold transition-all duration-200"
+              className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 backdrop-blur-md py-4 px-8 rounded-2xl text-lg font-semibold transition-all duration-200 bg-gradient-to-r from-blue-600/40 to-indigo-600/40 hover:from-blue-600/60 hover:to-indigo-600/60"
               aria-label="Start a random quiz right away"
             >
               Quick Play
@@ -450,20 +455,20 @@ export default function PujoQuizChallenge() {
           </div>
         </div>
 
-        {/* Leaderboard Preview */}
-        <Card className="max-w-md mx-auto bg-gradient-to-br from-purple-500/30 to-indigo-500/30 backdrop-blur-xl border border-white/20 shadow-2xl">
-          <CardHeader>
+        {/* Leaderboard Preview with Glassmorphism */}
+        <Card className="max-w-md mx-auto bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-xl overflow-hidden">
+          <CardHeader className="border-b border-white/10 pb-3">
             <CardTitle className="text-white text-center flex items-center justify-center gap-2">
               <Trophy className="h-5 w-5 text-yellow-300" />
               Top Performers
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             <div className="space-y-3">
               {getLeaderboardData().slice(0, 3).map((player, index) => (
                 <motion.div 
                   key={player.name} 
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 backdrop-filter backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-200"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -523,7 +528,7 @@ export default function PujoQuizChallenge() {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card
-                  className="cursor-pointer transform hover:scale-105 transition-all duration-200 hover:shadow-xl h-full border-2 border-transparent hover:border-purple-200"
+                  className="cursor-pointer transform hover:scale-105 transition-all duration-200 hover:shadow-xl h-full border-transparent backdrop-blur-sm bg-white/80 hover:bg-white/90 shadow-lg"
                   onClick={() => startQuiz(category.id)}
                 >
                   <CardContent className="p-6 text-center flex flex-col items-center justify-center h-full">
@@ -547,13 +552,13 @@ export default function PujoQuizChallenge() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <Button onClick={() => startQuiz()} className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl">
+          <Button onClick={() => startQuiz()} className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl backdrop-blur-sm bg-opacity-90 shadow-lg hover:shadow-purple-500/30">
             Mixed Questions
           </Button>
           <Button 
             variant="ghost" 
             onClick={() => setCurrentScreen("hero")} 
-            className="ml-2 text-purple-600 hover:text-purple-700 hover:bg-purple-100"
+            className="ml-2 text-purple-600 hover:text-purple-700 hover:bg-purple-100 backdrop-blur-sm"
           >
             Go Back
           </Button>
@@ -592,27 +597,27 @@ export default function PujoQuizChallenge() {
           </div>
 
           {/* Question Card */}
-          <Card className="mb-6 shadow-xl border-0 bg-white shadow-purple-100/50">
+          <Card className="mb-6 shadow-xl border-0 bg-white/90 backdrop-blur-md shadow-purple-100/50 rounded-xl overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-purple-100/50 to-indigo-100/50 rounded-t-lg">
               <CardTitle className="text-xl text-purple-900">{currentQ.question}</CardTitle>
             </CardHeader>
             <CardContent className="pt-4">
               <div className="grid gap-3">
                 {currentQ.options.map((option, index) => {
-                  let buttonClass = "w-full p-4 text-left border-2 rounded-xl transition-all duration-200 "
+                  let buttonClass = "w-full p-4 text-left border-2 rounded-xl transition-all duration-200 backdrop-blur-sm "
 
                   if (showAnswer) {
                     if (index === currentQ.correct) {
-                      buttonClass += "border-green-500 bg-green-50 text-green-800"
+                      buttonClass += "border-green-500 bg-green-50/90 text-green-800"
                     } else if (index === selectedAnswer && index !== currentQ.correct) {
-                      buttonClass += "border-red-500 bg-red-50 text-red-800"
+                      buttonClass += "border-red-500 bg-red-50/90 text-red-800"
                     } else {
                       buttonClass += "border-purple-200 bg-purple-50/30 text-purple-400"
                     }
                   } else if (selectedAnswer === index) {
-                    buttonClass += "border-purple-500 bg-purple-50 text-purple-800"
+                    buttonClass += "border-purple-500 bg-purple-50/80 text-purple-800"
                   } else {
-                    buttonClass += "border-purple-200 hover:border-purple-300 hover:bg-purple-50"
+                    buttonClass += "border-purple-200 hover:border-purple-300 hover:bg-purple-50/50"
                   }
 
                   return (
@@ -648,7 +653,7 @@ export default function PujoQuizChallenge() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-lg"
+                    className="mt-4 p-3 bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-lg"
                   >
                     <h4 className="font-medium text-indigo-800 mb-1 flex items-center">
                       <Info className="h-4 w-4 mr-2" /> Explanation
@@ -667,7 +672,7 @@ export default function PujoQuizChallenge() {
                 variant="outline"
                 size="sm"
                 onClick={toggleExplanation}
-                className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+                className="text-indigo-600 border-indigo-200 hover:bg-indigo-50/50 backdrop-blur-sm"
               >
                 {showExplanation ? "Hide" : "Show"} Explanation
               </Button>
@@ -677,7 +682,7 @@ export default function PujoQuizChallenge() {
               <Button
                 onClick={handleAnswerSubmit}
                 disabled={selectedAnswer === null}
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg ml-auto disabled:from-purple-400 disabled:to-indigo-400"
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg ml-auto disabled:from-purple-400 disabled:to-indigo-400 backdrop-blur-sm"
               >
                 {currentQuestion === filteredQuestions.length - 1 ? "Finish Quiz" : "Next Question"}
               </Button>
@@ -706,8 +711,8 @@ export default function PujoQuizChallenge() {
         variants={screenVariants}
       >
         <div className="container mx-auto px-4 max-w-2xl">
-          <Card className="bg-gradient-to-br from-purple-500/30 to-indigo-500/30 backdrop-blur-xl border border-white/20 shadow-2xl text-white">
-            <CardHeader className="text-center">
+          <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl text-white rounded-xl overflow-hidden">
+            <CardHeader className="text-center border-b border-white/10">
               <motion.div 
                 className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center"
                 initial={{ scale: 0 }}
@@ -718,7 +723,7 @@ export default function PujoQuizChallenge() {
               </motion.div>
               <CardTitle className="text-3xl font-bold">Quiz Complete! 🎉</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               {/* Score Display */}
               <div className="text-center space-y-4">
                 <motion.div 
@@ -733,7 +738,7 @@ export default function PujoQuizChallenge() {
 
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <motion.div 
-                    className="bg-gradient-to-r from-purple-500/40 to-purple-600/40 rounded-xl p-4"
+                    className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.7 }}
@@ -742,7 +747,7 @@ export default function PujoQuizChallenge() {
                     <div className="text-sm">Accuracy</div>
                   </motion.div>
                   <motion.div 
-                    className="bg-gradient-to-r from-indigo-500/40 to-indigo-600/40 rounded-xl p-4"
+                    className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
                     initial={{ x: 20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.7 }}
@@ -755,7 +760,7 @@ export default function PujoQuizChallenge() {
 
               {/* Stats and Summary */}
               <motion.div 
-                className="bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-xl p-4"
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.9 }}
@@ -788,7 +793,7 @@ export default function PujoQuizChallenge() {
 
               {/* Impact Message */}
               <motion.div 
-                className="bg-gradient-to-r from-blue-500/30 to-indigo-500/30 rounded-xl p-4 text-center"
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1.1 }}
@@ -806,7 +811,7 @@ export default function PujoQuizChallenge() {
               >
                 <Button
                   onClick={resetQuiz}
-                  className="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-purple-900 font-bold py-3 rounded-xl shadow-lg hover:shadow-amber-500/30"
+                  className="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-purple-900 font-bold py-3 rounded-xl shadow-lg hover:shadow-amber-500/30 backdrop-blur-sm"
                 >
                   <RotateCcw className="mr-2 h-4 w-4" />
                   Play Again
@@ -814,7 +819,7 @@ export default function PujoQuizChallenge() {
                 <Button
                   onClick={shareScore}
                   variant="outline"
-                  className="flex-1 border-2 border-white text-white hover:bg-white hover:text-purple-700 py-3 rounded-xl font-semibold"
+                  className="flex-1 border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm py-3 rounded-xl font-semibold"
                 >
                   <Share2 className="mr-2 h-4 w-4" />
                   Share Score
@@ -823,20 +828,20 @@ export default function PujoQuizChallenge() {
             </CardContent>
           </Card>
 
-          {/* Leaderboard */}
-          <Card className="mt-8 bg-gradient-to-br from-purple-500/30 to-indigo-500/30 backdrop-blur-xl border border-white/20 shadow-2xl">
-            <CardHeader>
+          {/* Leaderboard with Glassmorphism */}
+          <Card className="mt-8 bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-xl overflow-hidden">
+            <CardHeader className="border-b border-white/10 pb-3">
               <CardTitle className="text-white text-center flex items-center justify-center gap-2">
                 <Crown className="h-5 w-5 text-yellow-300" />
-                Weekly Leaderboard
+                Top 10 Leaderboard
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="pt-4">
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
                 {leaderboardData.map((player, index) => (
                   <motion.div 
                     key={player.name} 
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 transition-colors duration-200"
+                    className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-colors duration-200"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 1.5 + index * 0.1 }}
