@@ -16,6 +16,7 @@ interface QuizSectionProps {
     onAnswerSelect: (answerIndex: number) => void;
     onAnswerSubmit: () => void;
     onToggleExplanation: () => void;
+    onNextQuestion: () => void;
 }
 
 export function QuizSection({
@@ -29,7 +30,8 @@ export function QuizSection({
     showExplanation,
     onAnswerSelect,
     onAnswerSubmit,
-    onToggleExplanation
+    onToggleExplanation,
+    onNextQuestion
 }: QuizSectionProps) {
     // Simplified from the renderQuiz() function to use QuestionCard
     if (questions.length === 0) return <div>Loading questions...</div>;
@@ -57,6 +59,7 @@ export function QuizSection({
                 onAnswerSelect={onAnswerSelect}
                 onAnswerSubmit={onAnswerSubmit}
                 onToggleExplanation={onToggleExplanation}
+                onNextQuestion={onNextQuestion}
             />
         </motion.div>
     );

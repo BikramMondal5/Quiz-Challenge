@@ -118,7 +118,7 @@ export function useQuiz() {
 
         // Check if answer is correct and update score
         if (selectedAnswer === filteredQuestions[currentQuestion].correct) {
-            setScore(prevScore => prevScore + 1);
+            setScore(prevScore => prevScore + 20);
         }
         
         // Save the answer
@@ -126,20 +126,24 @@ export function useQuiz() {
         
         // Show the correct answer
         setShowAnswer(true);
+        setShowExplanation(true);
         
-        setTimeout(() => {
-            // If this was the last question, end the quiz
-            if (currentQuestion === filteredQuestions.length - 1) {
-                setTotalTime(Math.floor((Date.now() - quizStartTime) / 1000));
-                setCurrentScreen("results");
-            } else {
-                // Otherwise, move to the next question
-                setCurrentQuestion(prevQuestion => prevQuestion + 1);
-                setSelectedAnswer(null);
-                setShowAnswer(false);
-                setTimeLeft(30);
-            }
-        }, 2000);
+        // Note: We removed the automatic navigation with setTimeout
+    };
+    
+    const handleNextQuestion = () => {
+        // If this was the last question, end the quiz
+        if (currentQuestion === filteredQuestions.length - 1) {
+            setTotalTime(Math.floor((Date.now() - quizStartTime) / 1000));
+            setCurrentScreen("results");
+        } else {
+            // Otherwise, move to the next question
+            setCurrentQuestion(prevQuestion => prevQuestion + 1);
+            setSelectedAnswer(null);
+            setShowAnswer(false);
+            setShowExplanation(false);
+            setTimeLeft(30);
+        }
     };
 
     const resetQuiz = () => {
@@ -153,8 +157,8 @@ export function useQuiz() {
     };
 
     const shareScore = async () => {
-        const accuracy = Math.round((score / filteredQuestions.length) * 100);
-        const shareText = `I scored ${score}/${filteredQuestions.length} (${accuracy}%) on the ${selectedCategory || "Mixed"} Durga Puja Quiz Challenge! Can you beat my score? #DurgaPujaQuizChallenge`;
+        const accuracy = Math.round((score / (filteredQuestions.length * 20)) * 100);
+        const shareText = `I scored ${score}/${filteredQuestions.length * 20} (${accuracy}%) on the ${selectedCategory || "Mixed"} Durga Puja Quiz Challenge! Can you beat my score? #DurgaPujaQuizChallenge`;
         
         try {
             if (navigator.share) {
@@ -197,6 +201,7 @@ export function useQuiz() {
         startQuiz,
         handleAnswerSelect,
         handleAnswerSubmit,
+        handleNextQuestion,
         resetQuiz,
         shareScore,
         toggleExplanation

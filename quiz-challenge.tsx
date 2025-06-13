@@ -29,7 +29,8 @@ export default function PujoQuizChallenge() {
     handleAnswerSubmit,
     resetQuiz,
     shareScore,
-    toggleExplanation
+    toggleExplanation,
+    handleNextQuestion
   } = useQuiz();
 
   return (
@@ -62,6 +63,7 @@ export default function PujoQuizChallenge() {
             onAnswerSelect={handleAnswerSelect}
             onAnswerSubmit={handleAnswerSubmit}
             onToggleExplanation={toggleExplanation}
+            onNextQuestion={handleNextQuestion}
           />
         )}
         {currentScreen === "results" && (
