@@ -47,6 +47,19 @@ export function QuestionCard({
 
   return (
     <div className="container mx-auto px-4 max-w-2xl">
+      {/* Quit Button - Moved to the top right */}
+      <div className="mb-6 flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onQuit}
+          className="text-red-500 hover:text-red-700 hover:bg-red-50 border border-red-200"
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          Quit Quiz
+        </Button>
+      </div>
+
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
@@ -138,17 +151,6 @@ export function QuestionCard({
 
       {/* Bottom Action Buttons */}
       <div className="flex justify-between items-center">
-        {/* Quit button - always visible */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onQuit}
-          className="text-red-500 hover:text-red-700 hover:bg-red-50 border border-red-200"
-        >
-          <LogOut className="h-4 w-4 mr-2" />
-          Quit Quiz
-        </Button>
-
         {/* Center area for explanation button */}
         <div className="flex-grow text-center mx-2">
           {showAnswer && (
