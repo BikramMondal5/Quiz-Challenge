@@ -19,27 +19,13 @@ export interface QuizQuestion {
 }
 
 export interface LeaderboardEntry {
-  id?: string; // Unique identifier for the entry
   name: string;
   score: number;
   avatar: string;
   date?: string;
-  timestamp?: number; // For sorting by recency
-  category?: string; // The quiz category
-  accuracy?: number; // Percentage of correct answers
-  timeSpent?: number; // Total time spent in seconds
-  isCurrentUser?: boolean; // Flag to highlight the current user
+  timestamp?: number; // Added for cloud syncing
+  deviceId?: string;  // Added to track which device submitted the score
+  isLocal?: boolean;  // Flag to indicate if this is a local or cloud entry
 }
 
 export type ScreenType = "hero" | "categories" | "quiz" | "results";
-
-// User quiz history entry for local storage
-export interface QuizHistoryEntry {
-  date: string;
-  timestamp: number;
-  category: string;
-  score: number;
-  accuracy: number;
-  totalQuestions: number;
-  timeSpent: number;
-}

@@ -9,6 +9,7 @@ import { NamePrompt } from "./NamePrompt";
 import { getLeaderboardData } from "../data/leaderboard";
 import { QuizQuestion } from "../types";
 import { screenVariants } from "../utils/animations";
+import { useState, useEffect } from "react";
 
 interface ResultsSectionProps {
   score: number;
@@ -39,6 +40,20 @@ export function ResultsSection({
   const totalPoints = questions.length * 20;
   const accuracy = Math.round((score / totalPoints) * 100);
   const leaderboardData = getLeaderboardData();
+
+  // Show confetti animation when component mounts
+  useEffect(() => {
+    // Check if the player has a good score (over 70%) to celebrate
+    if (accuracy > 70) {
+      import('canvas-confetti').then(confetti => {
+        confetti.default({
+          particleCount: 200,
+          spread: 100,
+          origin: { y: 0.6 }
+        });
+      });
+    }
+  }, [accuracy]);
 
   return (
     <motion.div 
@@ -173,14 +188,16 @@ export function ResultsSection({
           </CardContent>
         </Card>
 
-        {/* Leaderboard with Glassmorphism */}
+        {/* Updated Leaderboard with Cloud Synchronization */}
         <LeaderboardCard 
           entries={leaderboardData}
           limit={10}
-          title="Top 10 Leaderboard"
+          title="Global Leaderboard"
           icon={<Crown className="h-5 w-5 text-yellow-300" />}
           className="mt-8"
-          messageText="Top 10 scorers of the week get featured on our Pujo Wall! 🏆"
+          messageText="Your scores are now shared across all users! 🏆"
+          scrollable={true}
+          maxHeight="300px"
         />
       </div>
 

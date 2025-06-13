@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ScreenType, QuizQuestion, LeaderboardEntry } from "../types";
 import { quizQuestions } from "../data/questions";
 import { addLeaderboardEntry, getInitials } from "../data/leaderboard";
+import { saveToCloudLeaderboard } from "../utils/leaderboard";
 import confetti from 'canvas-confetti';
 
 export function useQuiz() {
@@ -22,6 +23,9 @@ export function useQuiz() {
     const [playerName, setPlayerName] = useState<string>("");
     const [showNamePrompt, setShowNamePrompt] = useState<boolean>(false);
     const { toast } = useToast();
+    
+    // Added state for tracking cloud leaderboard syncing
+    const [isSyncingToCloud, setSyncingToCloud] = useState<boolean>(false);
 
     // Load player name from localStorage on init
     useEffect(() => {
@@ -108,7 +112,7 @@ export function useQuiz() {
     }, []);
 
     // Add the player's score to the leaderboard
-    const addToLeaderboard = () => {
+    const addToLeaderboard = async () => {
         if (!playerName) return;
         
         const accuracy = Math.round((score / (filteredQuestions.length * 20)) * 100);
@@ -122,13 +126,39 @@ export function useQuiz() {
             date: formattedDate
         };
         
+        // Add to local leaderboard
         addLeaderboardEntry(leaderboardEntry);
         
-        toast({
-            title: "Added to leaderboard!",
-            description: "Your score has been added to the leaderboard.",
-            duration: 3000,
-        });
+        // Also add to cloud leaderboard if score is above threshold (50%)
+        if (accuracy >= 50) {
+            setSyncingToCloud(true);
+            try {
+                const success = await saveToCloudLeaderboard(leaderboardEntry);
+                if (success) {
+                    toast({
+                        title: "Added to global leaderboard!",
+                        description: "Your score is now visible to all players worldwide.",
+                        duration: 3000,
+                    });
+                }
+            } catch (error) {
+                console.error("Error saving to cloud leaderboard:", error);
+                toast({
+                    title: "Added to local leaderboard only",
+                    description: "Could not connect to global leaderboard. Try again later.",
+                    duration: 3000,
+                    variant: "destructive"
+                });
+            } finally {
+                setSyncingToCloud(false);
+            }
+        } else {
+            toast({
+                title: "Added to local leaderboard!",
+                description: "Scores above 50% are shared globally.",
+                duration: 3000,
+            });
+        }
     };
 
     // Set the player's name and save it to localStorage
@@ -258,6 +288,7 @@ export function useQuiz() {
         quizStartTime,
         playerName,
         showNamePrompt,
+        isSyncingToCloud,
         setPlayerNameAndSave,
         startQuiz,
         handleAnswerSelect,

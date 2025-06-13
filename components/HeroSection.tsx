@@ -1,10 +1,13 @@
 // Contains the Hero section of the app
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Play, RefreshCw } from "lucide-react";
 import { LeaderboardCard } from "./LeaderboardCard";
 import { getLeaderboardData } from "../data/leaderboard";
 import { screenVariants } from "../utils/animations";
+import { useState, useEffect } from "react";
+import { LeaderboardEntry } from "../types";
+import { getCombinedLeaderboardData } from "../data/leaderboard";
 
 interface HeroSectionProps {
     onStartQuiz: () => void;
@@ -12,6 +15,36 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onStartQuiz, onSelectCategory }: HeroSectionProps) {
+    const [leaderboardEntries, setLeaderboardEntries] = useState<LeaderboardEntry[]>(getLeaderboardData());
+    const [isLoading, setIsLoading] = useState(true);
+    const [isClient, setIsClient] = useState(false);
+
+    // Set isClient to true on mount
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    // Fetch combined leaderboard data on component mount, but only on client
+    useEffect(() => {
+        if (!isClient) return;
+
+        const fetchLeaderboard = async () => {
+            setIsLoading(true);
+            try {
+                const combinedData = await getCombinedLeaderboardData();
+                setLeaderboardEntries(combinedData);
+            } catch (error) {
+                console.error("Error fetching global leaderboard:", error);
+                // Fallback to local leaderboard data on error
+                setLeaderboardEntries(getLeaderboardData());
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchLeaderboard();
+    }, [isClient]);
+
     return (
         <motion.div
             className="min-h-screen bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-800 relative overflow-hidden"
@@ -77,12 +110,22 @@ export function HeroSection({ onStartQuiz, onSelectCategory }: HeroSectionProps)
                     </div>
                 </div>
 
-                {/* Leaderboard Preview with Glassmorphism */}
+                {/* Updated Leaderboard with Global Scores */}
                 <LeaderboardCard 
-                    entries={getLeaderboardData()} 
-                    limit={3}
+                    entries={leaderboardEntries} 
+                    limit={5}
                     className="max-w-md mx-auto"
+                    title="Global Leaderboard"
+                    messageText="Scores are now shared across all users! 🏆"
                 />
+
+                {/* Connection Status */}
+                {isLoading && isClient && (
+                    <div className="flex items-center justify-center mt-4 text-white/70">
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        <span className="text-sm">Connecting to global leaderboard...</span>
+                    </div>
+                )}
             </div>
         </motion.div>
     );

@@ -1,5 +1,6 @@
 // Contains the leaderboard data
 import { LeaderboardEntry } from "../types";
+import { fetchCloudLeaderboard, saveToCloudLeaderboard, mergeLeaderboardEntries } from "../utils/leaderboard";
 
 // Default leaderboard entries as fallback
 const defaultLeaderboardData: LeaderboardEntry[] = [
@@ -14,6 +15,11 @@ const defaultLeaderboardData: LeaderboardEntry[] = [
     { name: "Debesh Mukherjee", score: 72, avatar: "https://plus.unsplash.com/premium_photo-1682089892133-556bde898f2c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW5kaWFuJTIwYm95fGVufDB8fDB8fHww.jpg", date: "June 9, 2025" },
     { name: "Kavita Joshi", score: 70, avatar: "https://www.shutterstock.com/image-photo/close-head-shot-portrait-preppy-600nw-1433809418.jpg", date: "June 7, 2025" },
 ];
+
+// Global cache for cloud leaderboard data
+let cachedCloudLeaderboard: LeaderboardEntry[] | null = null;
+let lastFetchTime = 0;
+const FETCH_INTERVAL = 30000; // Refresh cloud data every 30 seconds (reduced from 60s)
 
 // Generate initials for avatar fallback
 export const getInitials = (name: string): string => {
@@ -62,6 +68,21 @@ export const addLeaderboardEntry = (entry: LeaderboardEntry): void => {
   
   // Save back to localStorage
   localStorage.setItem("leaderboardData", JSON.stringify(topEntries));
+  
+  // Always save to cloud leaderboard, regardless of score
+  // This ensures all scores are synced between users
+  saveToCloudLeaderboard(entry)
+    .then(success => {
+      if (success) {
+        console.log("Score successfully saved to cloud leaderboard");
+        // Force refresh the cloud leaderboard on next request
+        lastFetchTime = 0;
+        localStorage.removeItem("last_cloud_fetch_time");
+      }
+    })
+    .catch(err => {
+      console.error("Failed to save to cloud leaderboard", err);
+    });
 };
 
 // Private function to get client-side data from localStorage
@@ -112,4 +133,54 @@ export const getLeaderboardData = (): LeaderboardEntry[] => {
   // On server side, always return default data
   // This ensures consistent rendering between server and client initial render
   return [...defaultLeaderboardData];
+};
+
+// Function to get combined local and cloud leaderboard data
+export const getCombinedLeaderboardData = async (): Promise<LeaderboardEntry[]> => {
+  if (typeof window === 'undefined') {
+    return [...defaultLeaderboardData]; // On server, return default data
+  }
+
+  try {
+    console.log("Getting combined leaderboard data...");
+    
+    // Get local data
+    const localData = getLeaderboardDataClient();
+    console.log(`Retrieved ${localData.length} local entries`);
+    
+    // Check if we should fetch new cloud data
+    const now = Date.now();
+    const storedLastFetchTime = localStorage.getItem("last_cloud_fetch_time");
+    
+    if (storedLastFetchTime) {
+      lastFetchTime = parseInt(storedLastFetchTime, 10);
+    }
+    
+    // Always fetch fresh cloud data if none exists or if it's time to refresh
+    if (!cachedCloudLeaderboard || (now - lastFetchTime) > FETCH_INTERVAL) {
+      try {
+        console.log("Fetch interval exceeded or no cached data, fetching fresh cloud data");
+        const cloudData = await fetchCloudLeaderboard();
+        cachedCloudLeaderboard = cloudData;
+        lastFetchTime = now;
+        localStorage.setItem("last_cloud_fetch_time", lastFetchTime.toString());
+      } catch (error) {
+        console.error("Failed to fetch cloud leaderboard:", error);
+        // If we've never fetched before, set an empty array
+        if (!cachedCloudLeaderboard) cachedCloudLeaderboard = [];
+      }
+    } else {
+      console.log("Using cached cloud data since fetch interval not exceeded");
+    }
+    
+    // Merge local and cloud data
+    const mergedData = mergeLeaderboardEntries(localData, cachedCloudLeaderboard || []);
+    console.log(`Returning combined leaderboard with ${mergedData.length} entries`);
+    
+    return mergedData;
+  } catch (error) {
+    console.error("Error getting combined leaderboard:", error);
+    // Fallback to local data only on error
+    return getLeaderboardData();
+  }
 };

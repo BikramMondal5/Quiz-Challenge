@@ -1,161 +1,205 @@
-// Utilities for managing leaderboard functionality
-import { LeaderboardEntry, QuizHistoryEntry } from "../types";
-import { getLeaderboardData as getStaticLeaderboardData } from "../data/leaderboard";
+// filepath: d:\Programming\workspace\Quiz-Challenge\utils\leaderboard.ts
+// Contains cloud synchronization utilities for the leaderboard
+import { LeaderboardEntry } from "../types";
 
-const LEADERBOARD_KEY = "pujoQuizLeaderboard";
-const USERNAME_KEY = "pujoQuizUsername";
-const DEFAULT_AVATAR_PLACEHOLDER = "/placeholder-user.jpg";
+// Use Firebase Realtime Database REST API for reliable cloud storage
+const FIREBASE_URL = "https://quiz-leaderboard-6734c-default-rtdb.firebaseio.com/leaderboard.json";
 
-// Generate random avatar if none provided
-const getRandomAvatarUrl = (): string => {
-  // List of placeholder avatar options
-  const placeholders = [
-    "/placeholder-user.jpg",
-    "https://i.pravatar.cc/150?img=" + Math.floor(Math.random() * 70)
-  ];
-  return placeholders[Math.floor(Math.random() * placeholders.length)];
-};
-
-// Generate a unique ID for entries
-const generateId = (): string => {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-};
-
-// Get current date in format "Month Day, Year"
-const getCurrentDate = (): string => {
-  return new Date().toLocaleDateString('en-US', { 
-    month: 'long', 
-    day: 'numeric', 
-    year: 'numeric' 
-  });
-};
-
-// Get or create username from local storage
-export const getUserName = (): string => {
-  if (typeof window === "undefined") return "Guest";
-  
-  let username = localStorage.getItem(USERNAME_KEY);
-  if (!username) {
-    // Default guest name with random number
-    username = `Guest${Math.floor(Math.random() * 1000)}`;
-    localStorage.setItem(USERNAME_KEY, username);
-  }
-  return username;
-};
-
-// Save username to local storage
-export const saveUserName = (name: string): void => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(USERNAME_KEY, name);
-};
-
-// Get leaderboard data from local storage, or initialize with static data if empty
-export const getLeaderboardData = (): LeaderboardEntry[] => {
-  if (typeof window === "undefined") {
-    // Server-side rendering - return static data
-    return getStaticLeaderboardData();
-  }
-
+/**
+ * Fetches leaderboard data from the cloud service
+ * @returns Promise with leaderboard entries
+ */
+export async function fetchCloudLeaderboard(): Promise<LeaderboardEntry[]> {
   try {
-    const savedData = localStorage.getItem(LEADERBOARD_KEY);
-    if (savedData) {
-      return JSON.parse(savedData);
+    if (typeof window === 'undefined') {
+      return []; // Return empty array on the server
+    }
+
+    console.log("Fetching cloud leaderboard data...");
+    
+    // Add cache buster to prevent browser caching
+    const cacheBuster = `?cacheBuster=${Date.now()}`;
+    
+    // Fetch from Firebase REST API
+    const response = await fetch(`${FIREBASE_URL}${cacheBuster}`);
+    
+    if (!response.ok) {
+      console.warn(`Cloud fetch failed (${response.status}): ${response.statusText}`);
+      return fetchFallbackCloudData(); 
     }
     
-    // Initialize with static data if no saved data
-    const staticData = getStaticLeaderboardData();
-    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(staticData));
-    return staticData;
+    const data = await response.json();
+    console.log("Raw cloud data received:", data);
+    
+    // Firebase returns null when empty
+    if (data === null) {
+      console.log("Empty data from Firebase, using fallback");
+      return fetchFallbackCloudData();
+    }
+    
+    // Firebase returns data as an object with keys, convert to array
+    let entries: LeaderboardEntry[] = [];
+    if (typeof data === 'object' && data !== null) {
+      entries = Object.values(data);
+      console.log(`Parsed ${entries.length} leaderboard entries from cloud`);
+    } else {
+      console.warn("Unexpected data format from cloud:", data);
+      return fetchFallbackCloudData();
+    }
+    
+    // Cache the cloud data locally for fallback
+    localStorage.setItem("cloud_leaderboard_cache", JSON.stringify(entries));
+    
+    return entries;
   } catch (error) {
-    console.error("Error retrieving leaderboard data:", error);
-    return getStaticLeaderboardData();
+    console.error("Error fetching cloud leaderboard:", error);
+    return fetchFallbackCloudData();
   }
-};
+}
 
-// Save leaderboard data to local storage
-export const saveLeaderboardData = (entries: LeaderboardEntry[]): void => {
-  if (typeof window === "undefined") return;
-  
+/**
+ * Gets cached cloud data from localStorage as fallback
+ */
+function fetchFallbackCloudData(): LeaderboardEntry[] {
   try {
-    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(entries));
+    const cachedData = localStorage.getItem("cloud_leaderboard_cache");
+    if (cachedData) {
+      const parsedData = JSON.parse(cachedData) as LeaderboardEntry[];
+      console.log(`Using cached cloud data (${parsedData.length} entries)`);
+      return parsedData;
+    }
+    
+    console.log("No cached cloud data available, using simulated data");
+    // If no cached data, use the simulated cloud data
+    const simulatedData = localStorage.getItem("global_leaderboard_data");
+    return simulatedData ? JSON.parse(simulatedData) : [];
   } catch (error) {
-    console.error("Error saving leaderboard data:", error);
+    console.error("Error reading fallback data:", error);
+    return [];
   }
-};
+}
 
-// Add a new entry to the leaderboard
-export const addLeaderboardEntry = (
-  score: number,
-  totalPoints: number,
-  category: string = "mixed",
-  timeSpent: number
-): LeaderboardEntry => {
-  const leaderboard = getLeaderboardData();
-  const username = getUserName();
-  const accuracy = Math.round((score / totalPoints) * 100);
-  
-  const newEntry: LeaderboardEntry = {
-    id: generateId(),
-    name: username,
-    score: accuracy, // Store the accuracy percentage as the score
-    avatar: getRandomAvatarUrl(),
-    date: getCurrentDate(),
-    timestamp: Date.now(),
-    category,
-    accuracy,
-    timeSpent,
-    isCurrentUser: true
-  };
+/**
+ * Saves a leaderboard entry to the cloud service
+ * @param entry The leaderboard entry to save
+ */
+export async function saveToCloudLeaderboard(entry: LeaderboardEntry): Promise<boolean> {
+  if (typeof window === 'undefined') {
+    return false;
+  }
 
-  // Add the new entry
-  leaderboard.push(newEntry);
+  try {
+    console.log(`Saving entry for ${entry.name} with score ${entry.score} to cloud...`);
+    
+    // Create unique ID for the entry based on name and timestamp to avoid conflicts
+    const entryId = `entry_${entry.name.replace(/\s+/g, '_').toLowerCase()}_${Date.now()}`;
+    
+    // Add metadata to entry
+    const enhancedEntry = {
+      ...entry,
+      timestamp: Date.now(),
+      deviceId: getDeviceId(),
+      lastUpdated: new Date().toISOString()
+    };
+    
+    console.log("Sending data to Firebase:", enhancedEntry);
+    
+    // Push the new entry to Firebase (Firebase will generate unique IDs)
+    const response = await fetch(`${FIREBASE_URL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(enhancedEntry)
+    });
+    
+    if (!response.ok) {
+      console.warn(`Failed to update cloud data (${response.status}): ${response.statusText}`);
+      return false;
+    }
+    
+    const result = await response.json();
+    console.log("Firebase response:", result);
+    
+    // Force refresh of cached data on next fetch
+    localStorage.removeItem("last_cloud_fetch_time");
+    
+    // Update local cache with the new entry
+    try {
+      const cachedData = localStorage.getItem("cloud_leaderboard_cache");
+      let cloudCache: LeaderboardEntry[] = cachedData ? JSON.parse(cachedData) : [];
+      
+      // Add the new entry to the cache
+      cloudCache.push(enhancedEntry);
+      
+      // Sort by score (highest first)
+      cloudCache.sort((a, b) => b.score - a.score);
+      
+      // Keep only top 100 entries
+      cloudCache = cloudCache.slice(0, 100);
+      
+      // Update cache
+      localStorage.setItem("cloud_leaderboard_cache", JSON.stringify(cloudCache));
+      console.log("Local cloud cache updated");
+    } catch (cacheError) {
+      console.error("Error updating local cache:", cacheError);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error saving to cloud leaderboard:", error);
+    return false;
+  }
+}
+
+/**
+ * Get or generate a unique device identifier
+ */
+function getDeviceId(): string {
+  if (typeof window === 'undefined') return 'server';
   
-  // Sort by score (highest first) and then by timestamp (most recent first for ties)
-  const sortedLeaderboard = leaderboard
-    .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return (b.timestamp || 0) - (a.timestamp || 0);
-    })
-    .slice(0, 100); // Keep only top 100 entries to prevent storage issues
+  let deviceId = localStorage.getItem('quiz_device_id');
   
-  // Remove isCurrentUser flag from all entries
-  sortedLeaderboard.forEach(entry => entry.isCurrentUser = false);
-  
-  // Find and mark the new entry as current user
-  const currentUserEntry = sortedLeaderboard.find(entry => entry.id === newEntry.id);
-  if (currentUserEntry) {
-    currentUserEntry.isCurrentUser = true;
+  if (!deviceId) {
+    // Generate random device ID
+    deviceId = 'device_' + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem('quiz_device_id', deviceId);
   }
   
-  // Save the updated leaderboard
-  saveLeaderboardData(sortedLeaderboard);
-  
-  return newEntry;
-};
+  return deviceId;
+}
 
-// Get user's rank in the leaderboard
-export const getUserRank = (userId: string): number | null => {
-  const leaderboard = getLeaderboardData();
-  const index = leaderboard.findIndex(entry => entry.id === userId);
-  return index !== -1 ? index + 1 : null;
-};
-
-// Get top N entries from leaderboard
-export const getTopEntries = (limit: number = 10): LeaderboardEntry[] => {
-  return getLeaderboardData().slice(0, limit);
-};
-
-// Check if a score would make it to the top N leaderboard
-export const wouldMakeLeaderboard = (score: number, totalPoints: number, limit: number = 10): boolean => {
-  const accuracy = Math.round((score / totalPoints) * 100);
-  const leaderboard = getLeaderboardData();
+/**
+ * Merges local and cloud leaderboard data
+ * @param localEntries Local leaderboard entries
+ * @param cloudEntries Cloud leaderboard entries
+ * @returns Merged and sorted entries
+ */
+export function mergeLeaderboardEntries(
+  localEntries: LeaderboardEntry[],
+  cloudEntries: LeaderboardEntry[]
+): LeaderboardEntry[] {
+  console.log(`Merging ${localEntries.length} local entries with ${cloudEntries.length} cloud entries`);
   
-  if (leaderboard.length < limit) return true;
+  // Combine both arrays
+  const combinedEntries = [...localEntries, ...cloudEntries];
   
-  const lowestScore = leaderboard
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .pop()?.score || 0;
+  // Create a map to ensure unique entries by name
+  const uniqueEntries = new Map<string, LeaderboardEntry>();
   
-  return accuracy > lowestScore;
-};
+  combinedEntries.forEach(entry => {
+    if (!uniqueEntries.has(entry.name) || entry.score > uniqueEntries.get(entry.name)!.score) {
+      uniqueEntries.set(entry.name, {
+        ...entry,
+        isLocal: localEntries.some(local => local.name === entry.name)
+      });
+    }
+  });
+  
+  // Convert back to array and sort by score (highest first)
+  const result = Array.from(uniqueEntries.values());
+  result.sort((a, b) => b.score - a.score);
+  
+  console.log(`Merged leaderboard has ${result.length} unique entries`);
+  return result;
+}
