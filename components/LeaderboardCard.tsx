@@ -1,10 +1,9 @@
 // Contains the Leaderboard card component
 import { motion } from "framer-motion";
-import { Trophy, Globe, User, RefreshCw } from "lucide-react";
+import { Trophy, Globe, RefreshCw } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { LeaderboardEntry } from "../types";
 import { useRef, useState, useEffect } from "react";
@@ -35,7 +34,6 @@ export function LeaderboardCard({
   scrollable = true
 }: LeaderboardCardProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<string>("all");
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClient, setIsClient] = useState(false);
@@ -52,11 +50,11 @@ export function LeaderboardCard({
     setEntries(initialEntries);
   }, [initialEntries]);
 
-  // Fetch combined (cloud + local) leaderboard data on mount and when tab changes
+  // Fetch combined (cloud + local) leaderboard data on mount
   useEffect(() => {
     async function fetchData() {
-      if (activeTab === "local" || !isClient) {
-        // For local tab, we don't need to fetch from cloud
+      if (!isClient) {
+        // Don't fetch on server
         return;
       }
       
@@ -80,20 +78,13 @@ export function LeaderboardCard({
       }
     }
     
-    if ((activeTab === "all" || activeTab === "cloud") && isClient) {
+    if (isClient) {
       fetchData();
-    } else if (isClient) {
-      setEntries(initialEntries);
     }
-  }, [activeTab, initialEntries, isClient]);
+  }, [initialEntries, isClient]);
   
-  // Filter entries based on active tab
-  const filteredEntries = entries.filter(entry => {
-    if (activeTab === "all") return true;
-    if (activeTab === "local") return initialEntries.some(local => local.name === entry.name);
-    if (activeTab === "cloud") return !entry.isLocal;
-    return true;
-  }).slice(0, limit);
+  // Take the top entries based on limit
+  const displayEntries = entries.slice(0, limit);
   
   // Handle manual refresh of cloud data
   const handleRefreshCloud = async () => {
@@ -160,234 +151,96 @@ export function LeaderboardCard({
       <CardHeader className="border-b border-white/10 pb-3">
         <CardTitle className="text-white text-center flex items-center justify-center gap-2">
           {icon}
-          {title}
+          {title} 
+          <span className="text-sm font-normal ml-1">
+            ({displayEntries.length})
+          </span>
         </CardTitle>
       </CardHeader>
       
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="border-b border-white/10 px-4 pb-1 pt-1">
-          <TabsList className="bg-white/10 backdrop-blur-md">
-            <TabsTrigger value="all" className="data-[state=active]:bg-white/20">
-              <Globe className="h-4 w-4 mr-1" /> All
-            </TabsTrigger>
-            <TabsTrigger value="cloud" className="data-[state=active]:bg-white/20">
-              <Globe className="h-4 w-4 mr-1" /> Global
-            </TabsTrigger>
-            <TabsTrigger value="local" className="data-[state=active]:bg-white/20">
-              <User className="h-4 w-4 mr-1" /> Local
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        
-        <TabsContent value="all" className="p-0 m-0">
-          <CardContent className={`pt-4 ${scrollable ? 'p-0' : ''}`}>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-10">
-                <RefreshCw className="h-8 w-8 text-white/70 animate-spin" />
-              </div>
-            ) : (
-              <div 
-                ref={scrollContainerRef}
-                className={`space-y-3 ${
-                  scrollable 
-                    ? `max-h-[${maxHeight}] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar` 
-                    : ''
-                }`}
-                style={{
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: '#4ade80 rgba(255,255,255,0.1)',
-                  maxHeight: scrollable ? maxHeight : 'auto' 
-                }}
-              >
-                {filteredEntries.length > 0 ? (
-                  filteredEntries.map((player, index) => (
-                    <motion.div 
-                      key={`${player.name}-${index}`}
-                      className={`flex items-center gap-3 p-2.5 rounded-lg ${
-                        player.isLocal ? 'bg-white/10' : 'bg-white/5'
-                      } backdrop-filter backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-200`}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <div 
-                        className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
-                          index === 0
-                            ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-900"
-                            : index === 1
-                              ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700"
-                              : index === 2
-                                ? "bg-gradient-to-r from-orange-400 to-amber-600 text-white"
-                                : "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
-                        }`}
-                      >
-                        {index + 1}
-                      </div>
-                      <Avatar className="h-8 w-8 relative">
-                        <AvatarImage src={player.avatar || "/placeholder.svg"} alt={player.name} />
-                        <AvatarFallback>
-                          {isClient ? renderAvatarFallback(player.name) : ""}
-                        </AvatarFallback>
-                        {player.isLocal && (
-                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
-                        )}
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex flex-col">
-                          <p className="text-white font-medium">{player.name}</p>
-                          {player.date && <p className="text-white/60 text-xs">{player.date}</p>}
-                        </div>
-                      </div>
-                      <Badge variant="secondary" className="bg-yellow-300 text-purple-900">
-                        {player.score}%
-                      </Badge>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-white/70">
-                    No leaderboard entries found
-                  </div>
-                )}
-              </div>
-            )}
-            {showMessage && (
-              <p className="text-blue-200 text-sm mt-2 mb-3 text-center">
-                {messageText}
-              </p>
-            )}
-          </CardContent>
-        </TabsContent>
-        
-        <TabsContent value="cloud" className="p-0 m-0">
-          <CardContent className={`pt-4 ${scrollable ? 'p-0' : ''}`}>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-10">
-                <RefreshCw className="h-8 w-8 text-white/70 animate-spin" />
-              </div>
-            ) : (
-              <div 
-                className={`space-y-3 ${
-                  scrollable 
-                    ? `max-h-[${maxHeight}] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar` 
-                    : ''
-                }`}
-                style={{
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: '#4ade80 rgba(255,255,255,0.1)',
-                  maxHeight: scrollable ? maxHeight : 'auto' 
-                }}
-              >
-                {filteredEntries.length > 0 ? (
-                  filteredEntries.map((player, index) => (
-                    <motion.div 
-                      key={`${player.name}-${index}-cloud`}
-                      className="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 backdrop-filter backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-200"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <div 
-                        className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
-                          index === 0
-                            ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-900"
-                            : index === 1
-                              ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700"
-                              : index === 2
-                                ? "bg-gradient-to-r from-orange-400 to-amber-600 text-white"
-                                : "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
-                        }`}
-                      >
-                        {index + 1}
-                      </div>
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={player.avatar || "/placeholder.svg"} alt={player.name} />
-                        <AvatarFallback>
-                          {isClient ? renderAvatarFallback(player.name) : ""}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex flex-col">
-                          <p className="text-white font-medium">{player.name}</p>
-                          {player.date && <p className="text-white/60 text-xs">{player.date}</p>}
-                        </div>
-                      </div>
-                      <Badge variant="secondary" className="bg-yellow-300 text-purple-900">
-                        {player.score}%
-                      </Badge>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-white/70">
-                    No global entries found
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </TabsContent>
-        
-        <TabsContent value="local" className="p-0 m-0">
-          <CardContent className={`pt-4 ${scrollable ? 'p-0' : ''}`}>
-            <div 
-              className={`space-y-3 ${
-                scrollable 
-                  ? `max-h-[${maxHeight}] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar` 
-                  : ''
-              }`}
-              style={{
-                scrollbarWidth: 'thin',
-                scrollbarColor: '#4ade80 rgba(255,255,255,0.1)',
-                maxHeight: scrollable ? maxHeight : 'auto' 
-              }}
-            >
-              {filteredEntries.length > 0 ? (
-                filteredEntries.map((player, index) => (
-                  <motion.div 
-                    key={`${player.name}-${index}-local`}
-                    className="flex items-center gap-3 p-2.5 rounded-lg bg-white/10 backdrop-filter backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-200"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+      <CardContent className={`pt-4 ${scrollable ? 'p-0' : ''}`}>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-10">
+            <RefreshCw className="h-8 w-8 text-white/70 animate-spin" />
+          </div>
+        ) : (
+          <div 
+            ref={scrollContainerRef}
+            className={`space-y-3 ${
+              scrollable 
+                ? `max-h-[${maxHeight}] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar` 
+                : ''
+            }`}
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#4ade80 rgba(255,255,255,0.1)',
+              maxHeight: scrollable ? maxHeight : 'auto' 
+            }}
+          >
+            {displayEntries.length > 0 ? (
+              displayEntries.map((player, index) => (
+                <motion.div 
+                  key={`${player.name}-${index}`}
+                  className={`flex items-center gap-3 p-2.5 rounded-lg ${
+                    player.isLocal ? 'bg-white/10' : 'bg-white/5'
+                  } backdrop-filter backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-200`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <div 
+                    className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
+                      index === 0
+                        ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-900"
+                        : index === 1
+                          ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700"
+                          : index === 2
+                            ? "bg-gradient-to-r from-orange-400 to-amber-600 text-white"
+                            : "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
+                    }`}
                   >
-                    <div 
-                      className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
-                        index === 0
-                          ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-purple-900"
-                          : index === 1
-                            ? "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700"
-                            : index === 2
-                              ? "bg-gradient-to-r from-orange-400 to-amber-600 text-white"
-                              : "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
-                      }`}
-                    >
-                      {index + 1}
-                    </div>
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={player.avatar || "/placeholder.svg"} alt={player.name} />
-                      <AvatarFallback>
-                        {isClient ? renderAvatarFallback(player.name) : ""}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex flex-col">
+                    {index + 1}
+                  </div>
+                  <Avatar className="h-8 w-8 relative">
+                    <AvatarImage src={player.avatar || "/placeholder.svg"} alt={player.name} />
+                    <AvatarFallback>
+                      {isClient ? renderAvatarFallback(player.name) : ""}
+                    </AvatarFallback>
+                    {player.isLocal && (
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white" title="Local Score"></div>
+                    )}
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex flex-col">
+                      <div className="flex items-center">
                         <p className="text-white font-medium">{player.name}</p>
-                        {player.date && <p className="text-white/60 text-xs">{player.date}</p>}
+                        {player.isLocal ? (
+                          <Badge variant="outline" className="ml-2 text-xs py-0 h-4 px-1 border-green-500 text-green-400">Local</Badge>
+                        ) : (
+                          <Badge variant="outline" className="ml-2 text-xs py-0 h-4 px-1 border-blue-500 text-blue-400">Global</Badge>
+                        )}
                       </div>
+                      {player.date && <p className="text-white/60 text-xs">{player.date}</p>}
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-300 text-purple-900">
-                      {player.score}%
-                    </Badge>
-                  </motion.div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-white/70">
-                  No local entries found
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </TabsContent>
-      </Tabs>
+                  </div>
+                  <Badge variant="secondary" className="bg-yellow-300 text-purple-900">
+                    {player.score}%
+                  </Badge>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-white/70">
+                No leaderboard entries found
+              </div>
+            )}
+          </div>
+        )}
+        {showMessage && (
+          <p className="text-blue-200 text-sm mt-2 mb-3 text-center px-4">
+            {messageText}
+          </p>
+        )}
+      </CardContent>
       
       <CardFooter className="border-t border-white/10 pt-3 pb-3 flex flex-col justify-center items-center space-y-2">
         <Button 
