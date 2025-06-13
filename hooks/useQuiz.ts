@@ -1,8 +1,9 @@
 // Contains the quiz state management logic
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { ScreenType, QuizQuestion } from "../types";
+import { ScreenType, QuizQuestion, LeaderboardEntry } from "../types";
 import { quizQuestions } from "../data/questions";
+import { addLeaderboardEntry, getInitials } from "../data/leaderboard";
 import confetti from 'canvas-confetti';
 
 export function useQuiz() {
@@ -18,7 +19,17 @@ export function useQuiz() {
     const [totalTime, setTotalTime] = useState(0);
     const [showExplanation, setShowExplanation] = useState(false);
     const [filteredQuestions, setFilteredQuestions] = useState<QuizQuestion[]>([]);
+    const [playerName, setPlayerName] = useState<string>("");
+    const [showNamePrompt, setShowNamePrompt] = useState<boolean>(false);
     const { toast } = useToast();
+
+    // Load player name from localStorage on init
+    useEffect(() => {
+        const savedName = localStorage.getItem("playerName");
+        if (savedName) {
+            setPlayerName(savedName);
+        }
+    }, []);
 
     // Filter questions based on selected category
     useEffect(() => {
@@ -61,6 +72,7 @@ export function useQuiz() {
     // Save score to localStorage when quiz ends
     useEffect(() => {
         if (currentScreen === "results") {
+            // Save quiz history
             const quizHistory = JSON.parse(localStorage.getItem("quizHistory") || "[]");
             quizHistory.push({
                 date: new Date().toISOString(),
@@ -70,8 +82,15 @@ export function useQuiz() {
                 timeSpent: totalTime
             });
             localStorage.setItem("quizHistory", JSON.stringify(quizHistory));
+
+            // If we have a player name, add to leaderboard
+            if (playerName) {
+                addToLeaderboard();
+            } else {
+                setShowNamePrompt(true);
+            }
         }
-    }, [currentScreen, score, selectedCategory, totalTime, filteredQuestions.length]);
+    }, [currentScreen, score, selectedCategory, totalTime, filteredQuestions.length, playerName]);
 
     // Trigger confetti when reaching results screen
     useEffect(() => {
@@ -87,6 +106,45 @@ export function useQuiz() {
             origin: { y: 0.6 }
         });
     }, []);
+
+    // Add the player's score to the leaderboard
+    const addToLeaderboard = () => {
+        if (!playerName) return;
+        
+        const accuracy = Math.round((score / (filteredQuestions.length * 20)) * 100);
+        const today = new Date();
+        const formattedDate = `${today.toLocaleString('default', { month: 'long' })} ${today.getDate()}, ${today.getFullYear()}`;
+        
+        const leaderboardEntry: LeaderboardEntry = {
+            name: playerName,
+            score: accuracy,
+            avatar: playerName.charAt(0),
+            date: formattedDate
+        };
+        
+        addLeaderboardEntry(leaderboardEntry);
+        
+        toast({
+            title: "Added to leaderboard!",
+            description: "Your score has been added to the leaderboard.",
+            duration: 3000,
+        });
+    };
+
+    // Set the player's name and save it to localStorage
+    const setPlayerNameAndSave = (name: string) => {
+        if (name && name.trim() !== "") {
+            const trimmedName = name.trim();
+            setPlayerName(trimmedName);
+            localStorage.setItem("playerName", trimmedName);
+            setShowNamePrompt(false);
+            
+            // Add to leaderboard after setting name
+            setTimeout(() => {
+                addToLeaderboard();
+            }, 0);
+        }
+    };
 
     const startQuiz = (categoryId?: string) => {
         setSelectedCategory(categoryId || "");
@@ -198,6 +256,9 @@ export function useQuiz() {
         showExplanation,
         filteredQuestions,
         quizStartTime,
+        playerName,
+        showNamePrompt,
+        setPlayerNameAndSave,
         startQuiz,
         handleAnswerSelect,
         handleAnswerSubmit,

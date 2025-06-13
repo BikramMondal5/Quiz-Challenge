@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Crown, RotateCcw, Share2, BarChart3 } from "lucide-react";
 import { LeaderboardCard } from "./LeaderboardCard";
+import { NamePrompt } from "./NamePrompt";
 import { getLeaderboardData } from "../data/leaderboard";
 import { QuizQuestion } from "../types";
 import { screenVariants } from "../utils/animations";
@@ -16,6 +17,9 @@ interface ResultsSectionProps {
   totalTime: number;
   onResetQuiz: () => void;
   onShareScore: () => void;
+  playerName: string;
+  showNamePrompt: boolean;
+  onSubmitName: (name: string) => void;
 }
 
 export function ResultsSection({ 
@@ -24,7 +28,10 @@ export function ResultsSection({
   answers, 
   totalTime,
   onResetQuiz,
-  onShareScore
+  onShareScore,
+  playerName,
+  showNamePrompt,
+  onSubmitName
 }: ResultsSectionProps) {
   const totalPoints = questions.length * 20;
   const accuracy = Math.round((score / totalPoints) * 100);
@@ -166,6 +173,12 @@ export function ResultsSection({
           messageText="Top 10 scorers of the week get featured on our Pujo Wall! 🏆"
         />
       </div>
+
+      {/* Name Prompt Dialog */}
+      <NamePrompt 
+        isOpen={showNamePrompt}
+        onSubmitName={onSubmitName}
+      />
     </motion.div>
   );
 }

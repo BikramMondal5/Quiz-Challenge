@@ -24,6 +24,9 @@ export default function PujoQuizChallenge() {
     showExplanation,
     filteredQuestions,
     quizStartTime,
+    playerName,
+    showNamePrompt,
+    setPlayerNameAndSave,
     startQuiz,
     handleAnswerSelect,
     handleAnswerSubmit,
@@ -74,6 +77,9 @@ export default function PujoQuizChallenge() {
             totalTime={totalTime}
             onResetQuiz={resetQuiz}
             onShareScore={shareScore}
+            playerName={playerName}
+            showNamePrompt={showNamePrompt}
+            onSubmitName={setPlayerNameAndSave}
           />
         )}
       </AnimatePresence>
