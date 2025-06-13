@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Crown, RotateCcw, Share2, BarChart3 } from "lucide-react";
+import { Trophy, Crown, RotateCcw, Share2, BarChart3, Home } from "lucide-react";
 import { LeaderboardCard } from "./LeaderboardCard";
 import { NamePrompt } from "./NamePrompt";
 import { getLeaderboardData } from "../data/leaderboard";
@@ -20,6 +20,8 @@ interface ResultsSectionProps {
   playerName: string;
   showNamePrompt: boolean;
   onSubmitName: (name: string) => void;
+  // Add new prop for navigation to home
+  onGoHome?: () => void;
 }
 
 export function ResultsSection({ 
@@ -31,7 +33,8 @@ export function ResultsSection({
   onShareScore,
   playerName,
   showNamePrompt,
-  onSubmitName
+  onSubmitName,
+  onGoHome
 }: ResultsSectionProps) {
   const totalPoints = questions.length * 20;
   const accuracy = Math.round((score / totalPoints) * 100);
@@ -139,11 +142,18 @@ export function ResultsSection({
 
             {/* Action Buttons */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.3 }}
             >
+              <Button
+                onClick={onGoHome}
+                className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-purple-500/30 backdrop-blur-sm"
+              >
+                <Home className="mr-2 h-4 w-4" />
+                Home
+              </Button>
               <Button
                 onClick={onResetQuiz}
                 className="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-purple-900 font-bold py-3 rounded-xl shadow-lg hover:shadow-amber-500/30 backdrop-blur-sm"

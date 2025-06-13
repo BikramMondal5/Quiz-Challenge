@@ -80,6 +80,7 @@ export default function PujoQuizChallenge() {
             playerName={playerName}
             showNamePrompt={showNamePrompt}
             onSubmitName={setPlayerNameAndSave}
+            onGoHome={() => setCurrentScreen("hero")}
           />
         )}
       </AnimatePresence>
