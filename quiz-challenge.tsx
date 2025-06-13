@@ -36,6 +36,11 @@ export default function PujoQuizChallenge() {
     handleNextQuestion
   } = useQuiz();
 
+  // Handler for quitting the quiz and returning to the hero screen
+  const handleQuitQuiz = () => {
+    setCurrentScreen("hero");
+  };
+
   return (
     <div className="font-sans">
       <AnimatePresence mode="wait">
@@ -67,6 +72,7 @@ export default function PujoQuizChallenge() {
             onAnswerSubmit={handleAnswerSubmit}
             onToggleExplanation={toggleExplanation}
             onNextQuestion={handleNextQuestion}
+            onQuit={handleQuitQuiz}
           />
         )}
         {currentScreen === "results" && (

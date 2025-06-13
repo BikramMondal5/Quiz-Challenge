@@ -17,6 +17,7 @@ interface QuizSectionProps {
     onAnswerSubmit: () => void;
     onToggleExplanation: () => void;
     onNextQuestion: () => void;
+    onQuit: () => void; // Add this line for quit functionality
 }
 
 export function QuizSection({
@@ -31,7 +32,8 @@ export function QuizSection({
     onAnswerSelect,
     onAnswerSubmit,
     onToggleExplanation,
-    onNextQuestion
+    onNextQuestion,
+    onQuit // Add this parameter
 }: QuizSectionProps) {
     // Simplified from the renderQuiz() function to use QuestionCard
     if (questions.length === 0) return <div>Loading questions...</div>;
@@ -60,6 +62,7 @@ export function QuizSection({
                 onAnswerSubmit={onAnswerSubmit}
                 onToggleExplanation={onToggleExplanation}
                 onNextQuestion={onNextQuestion}
+                onQuit={onQuit} // Pass the onQuit prop to QuestionCard
             />
         </motion.div>
     );

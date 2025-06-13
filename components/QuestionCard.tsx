@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle, XCircle, Clock, Info, ArrowRight } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Info, ArrowRight, LogOut } from "lucide-react";
 import { QuizQuestion } from "../types";
 
 interface QuestionCardProps {
@@ -23,6 +23,7 @@ interface QuestionCardProps {
   onAnswerSubmit: () => void;
   onToggleExplanation: () => void;
   onNextQuestion: () => void;
+  onQuit: () => void; // Add the quit functionality prop
 }
 
 export function QuestionCard({
@@ -38,7 +39,8 @@ export function QuestionCard({
   onAnswerSelect,
   onAnswerSubmit,
   onToggleExplanation,
-  onNextQuestion
+  onNextQuestion,
+  onQuit // Add the parameter here
 }: QuestionCardProps) {
   // Extract the question card part from the renderQuiz function
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
@@ -136,33 +138,50 @@ export function QuestionCard({
 
       {/* Bottom Action Buttons */}
       <div className="flex justify-between items-center">
-        {showAnswer && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onToggleExplanation}
-            className={`${showExplanation ? "bg-indigo-100 text-indigo-700 border-indigo-300" : "bg-purple-100 text-purple-700 border-purple-300"} hover:bg-opacity-80 hover:text-opacity-90 backdrop-blur-sm transition-all duration-200`}
-          >
-            {showExplanation ? "Hide" : "Show"} Explanation
-          </Button>
-        )}
+        {/* Quit button - always visible */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onQuit}
+          className="text-red-500 hover:text-red-700 hover:bg-red-50 border border-red-200"
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          Quit Quiz
+        </Button>
+
+        {/* Center area for explanation button */}
+        <div className="flex-grow text-center mx-2">
+          {showAnswer && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onToggleExplanation}
+              className={`${showExplanation ? "bg-indigo-100 text-indigo-700 border-indigo-300" : "bg-purple-100 text-purple-700 border-purple-300"} hover:bg-opacity-80 hover:text-opacity-90 backdrop-blur-sm transition-all duration-200`}
+            >
+              {showExplanation ? "Hide" : "Show"} Explanation
+            </Button>
+          )}
+        </div>
         
-        {!showAnswer ? (
-          <Button
-            onClick={onAnswerSubmit}
-            disabled={selectedAnswer === null}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg ml-auto disabled:from-purple-400 disabled:to-indigo-400 backdrop-blur-sm"
-          >
-            Submit Answer
-          </Button>
-        ) : (
-          <Button
-            onClick={onNextQuestion}
-            className="ml-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg backdrop-blur-sm"
-          >
-            {currentQuestion === totalQuestions - 1 ? "See Results" : "Next Question"} <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        )}
+        {/* Submit/Next button on the right */}
+        <div className="flex justify-end">
+          {!showAnswer ? (
+            <Button
+              onClick={onAnswerSubmit}
+              disabled={selectedAnswer === null}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg disabled:from-purple-400 disabled:to-indigo-400 backdrop-blur-sm"
+            >
+              Submit Answer
+            </Button>
+          ) : (
+            <Button
+              onClick={onNextQuestion}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-8 rounded-xl font-semibold shadow-md hover:shadow-lg backdrop-blur-sm"
+            >
+              {currentQuestion === totalQuestions - 1 ? "See Results" : "Next Question"} <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

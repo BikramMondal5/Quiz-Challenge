@@ -151,10 +151,7 @@ export function LeaderboardCard({
       <CardHeader className="border-b border-white/10 pb-3">
         <CardTitle className="text-white text-center flex items-center justify-center gap-2">
           {icon}
-          {title} 
-          <span className="text-sm font-normal ml-1">
-            ({displayEntries.length})
-          </span>
+          {title}
         </CardTitle>
       </CardHeader>
       
@@ -206,19 +203,11 @@ export function LeaderboardCard({
                     <AvatarFallback>
                       {isClient ? renderAvatarFallback(player.name) : ""}
                     </AvatarFallback>
-                    {player.isLocal && (
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white" title="Local Score"></div>
-                    )}
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <p className="text-white font-medium">{player.name}</p>
-                        {player.isLocal ? (
-                          <Badge variant="outline" className="ml-2 text-xs py-0 h-4 px-1 border-green-500 text-green-400">Local</Badge>
-                        ) : (
-                          <Badge variant="outline" className="ml-2 text-xs py-0 h-4 px-1 border-blue-500 text-blue-400">Global</Badge>
-                        )}
                       </div>
                       {player.date && <p className="text-white/60 text-xs">{player.date}</p>}
                     </div>
