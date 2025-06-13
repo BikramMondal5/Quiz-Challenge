@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LeaderboardEntry } from "../types";
+import { useRef } from "react";
 
 interface LeaderboardCardProps {
   entries: LeaderboardEntry[];
@@ -14,21 +15,24 @@ interface LeaderboardCardProps {
   showMessage?: boolean;
   className?: string;
   messageText?: string;
-  maxHeight?: string; // Added maxHeight prop
-  scrollable?: boolean; // Added scrollable prop
+  maxHeight?: string;
+  scrollable?: boolean;
 }
 
 export function LeaderboardCard({
   entries,
-  limit = 10, // Changed default from 3 to 10
+  limit = 10,
   title = "Top Performers",
   icon = <Trophy className="h-5 w-5 text-yellow-300" />,
   showMessage = true,
   className = "",
-  messageText = "Join our daily quiz challenge to get featured!",
-  maxHeight = "420px", // Default max height
-  scrollable = true // Default to scrollable
+  messageText = "Top 10 scorers of the week get featured on our Pujo Wall! 🏆",
+  maxHeight = "300px", // Reduced height to show about 5 players
+  scrollable = true
 }: LeaderboardCardProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Limit entries to the maximum specified
   const displayEntries = entries.slice(0, limit);
 
   return (
@@ -41,14 +45,16 @@ export function LeaderboardCard({
       </CardHeader>
       <CardContent className={`pt-4 ${scrollable ? 'p-0' : ''}`}>
         <div 
+          ref={scrollContainerRef}
           className={`space-y-3 ${
             scrollable 
-              ? 'max-h-[420px] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar' 
+              ? `max-h-[${maxHeight}] overflow-y-auto pr-2 pl-4 py-4 custom-scrollbar` 
               : ''
           }`}
           style={{
             scrollbarWidth: 'thin',
-            scrollbarColor: '#4ade80 rgba(255,255,255,0.1)'
+            scrollbarColor: '#4ade80 rgba(255,255,255,0.1)',
+            maxHeight: scrollable ? maxHeight : 'auto'  // Explicitly set max height
           }}
         >
           {displayEntries.map((player, index) => (
@@ -94,7 +100,7 @@ export function LeaderboardCard({
           ))}
         </div>
         {showMessage && (
-          <p className="text-blue-200 text-sm mt-4 text-center">
+          <p className="text-blue-200 text-sm mt-2 mb-3 text-center">
             {messageText}
           </p>
         )}
