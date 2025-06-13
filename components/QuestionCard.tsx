@@ -116,7 +116,7 @@ export function QuestionCard({
           </div>
 
           {/* Explanation section */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {showAnswer && showExplanation && question.explanation && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -141,7 +141,7 @@ export function QuestionCard({
             variant="outline"
             size="sm"
             onClick={onToggleExplanation}
-            className="text-indigo-600 border-indigo-200 hover:bg-indigo-50/50 backdrop-blur-sm"
+            className={`${showExplanation ? "bg-indigo-100 text-indigo-700 border-indigo-300" : "bg-purple-100 text-purple-700 border-purple-300"} hover:bg-opacity-80 hover:text-opacity-90 backdrop-blur-sm transition-all duration-200`}
           >
             {showExplanation ? "Hide" : "Show"} Explanation
           </Button>
