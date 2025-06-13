@@ -407,14 +407,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "Snacks like Samosa, Pakora, and Chakli are popular during Durga Puja in Bengal, enjoyed for their taste and crunch."
   },
   {
-    id: 33,
-    question: "What is the 'Durga Saptashati', recited during Durga Puja?",
-    options: ["A form of dance", "A type of sweet", "A scripture of 700 verses", "A musical instrument"],
-    correct: 2,
-    category: "puja-history",
-    explanation: "'Durga Saptashati' is a scripture consisting of 700 verses in praise of Goddess Durga, recited for her blessings during the puja."
-  },
-  {
     id: 34,
     question: "Which of these is NOT a traditional item used in Durga Puja rituals?",
     options: ["Kalash (pot)", "Diya (lamp)", "Chakra (wheel)", "Cross"],
@@ -429,14 +421,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 1,
     category: "bengali-culture",
     explanation: "'Dhak' is a traditional musical drum played during Durga Puja, especially during the procession of the goddess's idol."
-  },
-  {
-    id: 36,
-    question: "Which of these is a famous Durga Puja celebration outside India?",
-    options: ["Durga Puja in London", "Durga Puja in New York", "Durga Puja in Sydney", "All of the above"],
-    correct: 3,
-    category: "puja-history",
-    explanation: "Durga Puja is celebrated with great enthusiasm in many countries outside India, including the UK, USA, and Australia, by the Bengali diaspora."
   },
   {
     id: 37,
@@ -461,14 +445,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 1,
     category: "puja-rituals",
     explanation: "'Sandhi Puja' is performed at the juncture of Ashtami and Navami during Durga Puja, marking the end of the auspicious Durga Puja period."
-  },
-  {
-    id: 40,
-    question: "Which of these is a traditional attire for women during Durga Puja in Bengal?",
-    options: ["Lehenga", "Saree", "Salwar Kameez", "All of the above"],
-    correct: 3,
-    category: "puja-history",
-    explanation: "Women in Bengal traditionally wear Sarees, often in red and white, during Durga Puja. Some also wear Lehenga or Salwar Kameez."
   },
   {
     id: 41,
@@ -559,14 +535,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "Kumartuli is famous for its traditional clay artisans who create the Durga idols. The pandals in this area often showcase this heritage craft."
   },
   {
-    id: 52,
-    question: "Which day of Durga Puja is considered most auspicious for Sandhi Puja?",
-    options: ["Between Saptami and Ashtami", "Between Ashtami and Navami", "Between Navami and Dashami", "Between Shashti and Saptami"],
-    correct: 1,
-    category: "puja-rituals",
-    explanation: "Sandhi Puja is performed at the juncture (sandhi) of Ashtami and Navami, considered the most powerful moment during Durga Puja."
-  },
-  {
     id: 53,
     question: "What is 'Dhunachi' used for during Durga Puja?",
     options: ["Cooking bhog", "Burning incense", "Carrying water", "Playing music"],
@@ -581,14 +549,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 2,
     category: "puja-fashion",
     explanation: "Pashmina, a fine wool textile from Kashmir, is not traditionally associated with Bengali Durga Puja clothing, unlike Kantha, Jamdani, and Dhakai."
-  },
-  {
-    id: 55,
-    question: "Who is credited with making Durga Puja a grand public celebration in Kolkata during the colonial era?",
-    options: ["Raja Ram Mohan Roy", "Rabindranath Tagore", "Swami Vivekananda", "Raja Nabakrishna Deb"],
-    correct: 3,
-    category: "puja-history",
-    explanation: "Raja Nabakrishna Deb of Sovabazar is credited with organizing one of the first grand community Durga Puja celebrations in Kolkata in 1757."
   },
   {
     id: 56,
@@ -631,14 +591,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "In traditional Bengali Durga Puja idols, Goddess Lakshmi (symbolizing wealth) is depicted on Durga's right side."
   },
   {
-    id: 61,
-    question: "Which of these is NOT one of the four immersion days during Durga Puja?",
-    options: ["Vijaya Dashami", "Ekadashi", "Dwadashi", "Panchami"],
-    correct: 3,
-    category: "puja-rituals",
-    explanation: "Panchami is not an immersion day. The four immersion days are Vijaya Dashami, Ekadashi, Dwadashi, and Trayodashi."
-  },
-  {
     id: 62,
     question: "What is 'Anando Mela' during Durga Puja?",
     options: ["Cultural program", "Food fair", "Drama competition", "Traditional dance"],
@@ -661,14 +613,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 0,
     category: "pandal-art",
     explanation: "Nandalal Bose, a pioneer of modern Indian art, introduced significant artistic innovations in Durga idol-making, moving away from traditional styles."
-  },
-  {
-    id: 65,
-    question: "What is the traditional ritual performed before placing the 'Chokkhudaan' during idol-making?",
-    options: ["Pranpratishta", "Bodhon", "Amontron", "Adibas"],
-    correct: 1,
-    category: "puja-rituals",
-    explanation: "Bodhon (awakening) is performed before Chokkhudaan (giving eyes), symbolizing inviting the goddess to enter the idol."
   },
   {
     id: 66,
@@ -751,14 +695,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "According to tradition, Goddess Durga visits Earth with her children - Lakshmi, Saraswati, Ganesha, and Kartikeya."
   },
   {
-    id: 76,
-    question: "What is 'Baran' in the context of Durga Puja rituals?",
-    options: ["A farewell ritual", "A welcoming ritual", "A food offering", "A purification ritual"],
-    correct: 0,
-    category: "puja-history",
-    explanation: "'Baran' is the farewell ritual performed during Durga Puja, where married women bid goodbye to the goddess with red vermillion, sweets, and gifts."
-  },
-  {
     id: 77,
     question: "Which of these is a traditional Bengali dessert served on Bijoya Dashami?",
     options: ["Patishapta", "Mihidana", "Narkel Naru", "All of the above"],
@@ -799,14 +735,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "All these rice dishes are served during Durga Puja - regular Pulao, Ghee Bhat (rice with clarified butter), and Basanti Pulao (sweet yellow rice)."
   },
   {
-    id: 82,
-    question: "What is 'Ghot' or 'Kalash' in Durga Puja rituals?",
-    options: ["A sacred pot symbolizing the goddess", "A musical instrument", "A type of offering", "A special pandal design"],
-    correct: 0,
-    category: "puja-rituals",
-    explanation: "Ghot or Kalash is a sacred water pot with a coconut and mango leaves on top, symbolizing the goddess's presence during the puja."
-  },
-  {
     id: 83,
     question: "In which year did UNESCO include Durga Puja in its Representative List of the Intangible Cultural Heritage of Humanity?",
     options: ["2019", "2020", "2021", "2022"],
@@ -829,14 +757,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 3,
     category: "durga-trivia",
     explanation: "In the traditional 'ekchala' style, all deities (Durga, Lakshmi, Saraswati, Ganesha, Kartikeya) are placed under one frame/backdrop on the same pedestal."
-  },
-  {
-    id: 86,
-    question: "What is the significance of the banana plant (kola bou) during Durga Puja?",
-    options: ["It represents abundance", "It represents fertility", "It symbolizes Lord Ganesha's wife", "Both A and B"],
-    correct: 3,
-    category: "puja-rituals",
-    explanation: "The banana plant (kola bou) represents both abundance and fertility. It's ritually dressed as a bride and placed next to Lord Ganesha."
   },
   {
     id: 87,
@@ -895,14 +815,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "'Chandmala' refers to the decorative lighting arrangements used to adorn Durga Puja pandals and surrounding areas."
   },
   {
-    id: 94,
-    question: "Which day of Durga Puja is associated with 'Nabami Bhog'?",
-    options: ["Saptami", "Ashtami", "Navami", "Dashami"],
-    correct: 2,
-    category: "puja-history",
-    explanation: "'Nabami Bhog' is served on Navami, the ninth day of the Durga Puja festival, offering a grand feast to the goddess before her departure."
-  },
-  {
     id: 95,
     question: "What is the significance of 'Kash Phool' (Kans grass) in Durga Puja?",
     options: ["It's used to make the idol", "It signifies the arrival of autumn and the goddess", "It's offered as bhog", "It's used for decoration only"],
@@ -917,14 +829,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 3,
     category: "pandal-hopping",
     explanation: "Various pandals have adopted environmental themes like 'Plastic-free Puja,' 'Green Durga,' and 'Eco-friendly Mother,' creating idols from recycled and sustainable materials."
-  },
-  {
-    id: 97,
-    question: "What is 'Dhuno Pora' in Durga Puja rituals?",
-    options: ["A type of food offering", "Burning of frankincense", "A prayer chant", "A dance form"],
-    correct: 1,
-    category: "puja-rituals",
-    explanation: "'Dhuno Pora' is a ritual involving the burning of frankincense resin (dhuno) as an offering to the goddess, often performed by a priest in a trance-like state."
   },
   {
     id: 98,
@@ -949,14 +853,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 2,
     category: "mythology",
     explanation: "According to Hindu mythology, Goddess Durga rescued the gods from the tyranny of the buffalo demon Mahishasura, whom she eventually slayed."
-  },
-  {
-    id: 101,
-    question: "What is the significance of the 108 lotus flowers in Durga Puja rituals?",
-    options: ["They represent the 108 names of the goddess", "They are offered during Pushpanjali", "They symbolize purity and divinity", "All of the above"],
-    correct: 3,
-    category: "puja-history",
-    explanation: "The 108 lotus flowers represent the 108 names of the goddess, are offered during Pushpanjali rituals, and symbolize purity and divinity in Durga Puja."
   },
   {
     id: 102,
@@ -999,14 +895,6 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "Sovabazar Rajbari hosts the oldest recorded community Durga Puja in Kolkata, started by Raja Nabakrishna Deb in 1757 to honor Lord Clive."
   },
   {
-    id: 107,
-    question: "What is the significance of the 'Ghatsthapana' ritual in Durga Puja?",
-    options: ["It marks the beginning of the puja", "It symbolizes the goddess's arrival", "It establishes a sacred area for worship", "All of the above"],
-    correct: 3,
-    category: "puja-rituals",
-    explanation: "'Ghatsthapana' marks the beginning of Durga Puja, symbolizes the goddess's arrival, and establishes a sacred area for worship by installing a holy water pot (ghat)."
-  },
-  {
     id: 108,
     question: "Which deity is depicted on Durga's left side in traditional Durga Puja idols?",
     options: ["Lakshmi", "Saraswati", "Kali", "Ganesha"],
@@ -1037,22 +925,6 @@ const quizQuestions: QuizQuestion[] = [
     correct: 2,
     category: "puja-fashion",
     explanation: "'Shitalpati' is a traditional Bengal jewelry typically worn during Durga Puja, named after the cool sensation it gives when worn against the skin."
-  },
-  {
-    id: 112,
-    question: "What is 'Anjali' in the context of Durga Puja rituals?",
-    options: ["A prayer offering", "A type of flower", "A ritual dance", "A special food item"],
-    correct: 0,
-    category: "puja-history",
-    explanation: "'Anjali' is a prayer offering made to Goddess Durga with flowers, water, and mantras, typically performed three times a day during the festival."
-  },
-  {
-    id: 113,
-    question: "Which city's metro service extends special operating hours during Durga Puja?",
-    options: ["Delhi", "Mumbai", "Kolkata", "Chennai"],
-    correct: 2,
-    category: "durga-trivia",
-    explanation: "Kolkata Metro extends its service hours significantly during Durga Puja to accommodate the large number of pandal-hoppers throughout the night."
   },
   {
     id: 114,
@@ -1095,21 +967,150 @@ const quizQuestions: QuizQuestion[] = [
     explanation: "Men traditionally wear 'Dhoti-Punjabi' (dhoti with a traditional Bengali-style kurta) during Durga Puja processions, especially for the immersion ceremony."
   },
   {
-    id: 119,
-    question: "Which of these is a ritual specifically performed during the immersion procession of Durga idols?",
-    options: ["Darpan Bisarjan", "Neelanjana", "Sindoor Khela", "All of the above"],
-    correct: 0,
-    category: "puja-rituals",
-    explanation: "'Darpan Bisarjan' (immersion in a mirror) is a ritual where the reflection of the idol is seen in a mirror and symbolically immersed before the actual immersion."
-  },
-  {
     id: 120,
     question: "Which famous Bengali writer wrote extensively about Durga Puja celebrations in his works?",
     options: ["Bankim Chandra Chattopadhyay", "Rabindranath Tagore", "Sarat Chandra Chattopadhyay", "Bibhutibhushan Bandyopadhyay"],
     correct: 2,
     category: "bengali-culture",
     explanation: "Sarat Chandra Chattopadhyay wrote extensively about Durga Puja celebrations in Bengal in many of his novels and short stories, capturing the cultural and social aspects of the festival."
-  }
+  },
+  {
+    id: 121,
+    question: "What is the significance of 'Alpona' in Bengali festivals like Durga Puja?",
+    options: ["A type of sweet", "A traditional floor art", "A ritual song", "A type of dress"],
+    correct: 1,
+    category: "bengali-culture",
+    explanation: "'Alpona' is a traditional Bengali floor art made using rice paste, typically created during religious festivals like Durga Puja to welcome deities and create sacred space."
+  },
+  {
+    id: 122,
+    question: "Which flower is most commonly used in Bengali rituals during Durga Puja?",
+    options: ["Rose", "Sunflower", "Marigold", "Lotus"],
+    correct: 2,
+    category: "bengali-culture",
+    explanation: "Marigold flowers are widely used in Bengali rituals, especially during Durga Puja, for their vibrant color and auspicious symbolism."
+  },
+  {
+    id: 123,
+    question: "What is a common eco-friendly material used in modern Durga Puja pandal decorations?",
+    options: ["Plastic", "Thermocol", "Jute", "Acrylic"],
+    correct: 2,
+    category: "pandal-art",
+    explanation: "Jute is a popular eco-friendly material used in modern Durga Puja pandals to promote sustainability and traditional craftsmanship."
+  },
+  {
+    id: 124,
+    question: "What boon made Mahishasura invincible to gods, prompting the creation of Goddess Durga?",
+    options: ["He could not be killed by any male", "He could not die during the day", "He was immortal", "Only Lord Vishnu could kill him"],
+    correct: 0,
+    category: "mythology",
+    explanation: "Mahishasura received a boon that no man or god could kill him, leading to the creation of Goddess Durga who was neither male nor god, but a divine female warrior."
+  },
+  {
+    id: 125,
+    question: "Why does Goddess Durga have ten arms in mythological depictions?",
+    options: ["To show her divine beauty", "To hold the gifts from the gods", "To perform multiple tasks", "To represent the ten directions"],
+    correct: 1,
+    category: "mythology",
+    explanation: "Each of Durga's ten arms holds a weapon gifted by a different god, symbolizing the collective power of all divine forces in the fight against evil."
+  },
+  {
+    id: 126,
+    question: "Which color combination is most traditionally worn by Bengali women during Durga Puja?",
+    options: ["Blue and green", "Black and gold", "Red and white", "Pink and silver"],
+    correct: 2,
+    category: "puja-fashion",
+    explanation: "The red and white saree is the most iconic and traditional attire worn by Bengali women during Durga Puja, symbolizing purity and power."
+  },
+  {
+    id: 127,
+    question: "What accessory is commonly used to decorate hair buns (khopa) during Durga Puja?",
+    options: ["Gold chains", "Feathers", "Fresh flowers", "Pearl clips"],
+    correct: 2,
+    category: "puja-fashion",
+    explanation: "Fresh flowers, especially jasmine and marigold, are traditionally used to decorate the 'khopa' or hair bun during Durga Puja celebrations."
+  },
+  {
+    id: 128,
+    question: "Which time of day is most popular for pandal hopping in Kolkata during Durga Puja?",
+    options: ["Morning", "Afternoon", "Evening", "Late night"],
+    correct: 3,
+    category: "pandal-hopping",
+    explanation: "Late night is the most popular time for pandal hopping in Kolkata, when the crowds peak, lights dazzle, and cultural events take place."
+  },
+  {
+    id: 129,
+    question: "What is a unique feature of the Suruchi Sangha pandal in Kolkata?",
+    options: ["It uses only natural materials", "It is themed on different Indian states each year", "It floats on water", "It is dedicated to tribal art"],
+    correct: 1,
+    category: "pandal-hopping",
+    explanation: "Suruchi Sangha is famous for showcasing a different Indian state each year through its pandal design, promoting cultural unity."
+  },
+  {
+    id: 130,
+    question: "Which spice is commonly used in Bhoger Khichuri to give it a distinct aroma?",
+    options: ["Cinnamon", "Cumin", "Bay leaf", "All of the above"],
+    correct: 3,
+    category: "bhog-cuisine",
+    explanation: "Bhoger Khichuri is flavored with aromatic spices like bay leaf, cinnamon, and cumin to enhance its divine fragrance and taste."
+  },
+  {
+    id: 131,
+    question: "What is typically served as a dessert alongside Bhoger Khichuri during Durga Puja?",
+    options: ["Chhanar Payesh", "Mihidana", "Rosogolla", "All of the above"],
+    correct: 3,
+    category: "bhog-cuisine",
+    explanation: "All of these sweets—Chhanar Payesh, Mihidana, and Rosogolla—are commonly served as dessert alongside Bhoger Khichuri during Durga Puja."
+  },
+  {
+    id: 132,
+    question: "Which ingredient is avoided in traditional Bhog offerings to Maa Durga?",
+    options: ["Onion", "Garlic", "Both onion and garlic", "Chili"],
+    correct: 2,
+    category: "bhog-cuisine",
+    explanation: "Traditional Bhog is strictly vegetarian and 'satvik', avoiding both onion and garlic to maintain purity and sanctity."
+  },
+  {
+    id: 133,
+    question: "What is the primary material used to make the body of a traditional dhak?",
+    options: ["Wood", "Metal", "Clay", "Plastic"],
+    correct: 0,
+    category: "dhak-music",
+    explanation: "The body of a traditional dhak is made of wood, which is hollowed out and covered with animal hide to produce its resonant sound."
+  },
+  {
+    id: 134,
+    question: "Which rhythmic pattern on the dhak signals the beginning of 'Sandhi Puja'?",
+    options: ["Aarti Taal", "Chandi Taal", "Mahasnan Beat", "Sandhi Beat"],
+    correct: 3,
+    category: "dhak-music",
+    explanation: "The 'Sandhi Beat' is a special rhythmic pattern played on the dhak to mark the highly auspicious Sandhi Puja, transitioning from Ashtami to Navami."
+  },
+  {
+    id: 135,
+    question: "Which city in the United Kingdom hosts one of the largest Durga Puja celebrations?",
+    options: ["Manchester", "Birmingham", "London", "Leeds"],
+    correct: 2,
+    category: "puja-around-world",
+    explanation: "London hosts one of the largest Durga Puja celebrations in the UK, with grand pandals and cultural events by the Bengali diaspora."
+  },
+  {
+    id: 136,
+    question: "What unique challenge do organizers face while celebrating Durga Puja abroad?",
+    options: ["Finding enough devotees", "Importing traditional materials", "Language barriers", "All of the above"],
+    correct: 3,
+    category: "puja-around-world",
+    explanation: "Organizers abroad often face challenges such as sourcing traditional materials, gathering enough volunteers, and cultural communication gaps."
+  },
+  {
+    id: 137,
+    question: "Which Southeast Asian country has a growing Bengali community that organizes Durga Puja annually?",
+    options: ["Thailand", "Singapore", "Vietnam", "Malaysia"],
+    correct: 1,
+    category: "puja-around-world",
+    explanation: "Singapore has an active Bengali community that organizes Durga Puja each year with traditional rituals, bhog, and cultural festivities."
+  }  
+  
 ]
 
 // Get mock leaderboard data but with dates
